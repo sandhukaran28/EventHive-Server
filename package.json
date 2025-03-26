@@ -1,0 +1,11 @@
+{
+  "name": "eventhive",
+  "version": "1.0.0",
+  "description": "Web App for finding local events around",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karan Sandhu",
+  "license": "ISC"
+}
