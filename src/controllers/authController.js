@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 
 // Register a new user
 exports.registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password,isAdmin  } = req.body;
 
   try {
     if (!name || !email || !password) {
@@ -23,6 +23,7 @@ exports.registerUser = async (req, res) => {
       name,
       email,
       password,  // Note: The password will be hashed in the pre-save hook automatically
+      isAdmin: isAdmin || false, 
     });
 
     // Save to DB
@@ -38,6 +39,7 @@ exports.registerUser = async (req, res) => {
         id: newUser._id,
         name: newUser.name,
         email: newUser.email,
+        isAdmin: newUser.isAdmin, 
       },
       token,
     });
@@ -81,6 +83,7 @@ exports.loginUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        isAdmin: user.isAdmin, 
       },
       token,
     });
