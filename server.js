@@ -3,15 +3,16 @@ const express = require("express");
 const cors = require("cors");
 const routes = require("./src/routes/index");
 const mongoose = require("mongoose");
+const helmet = require("helmet");
 
 // Put your code here
 
 const app = express();
 
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const port = 3000;
+app.use(cors());
 
 // Put your code here
 
