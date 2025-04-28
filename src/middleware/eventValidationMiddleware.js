@@ -15,7 +15,7 @@ exports.validateEvent = [
   ];
 
   exports.validateBooking = [
-    body("event").isMongoId().withMessage("Invalid event ID"),
+    body("eventId").isMongoId().withMessage("Invalid event ID"),
     body("quantity").isInt({ min: 1 }).withMessage("Quantity must be at least 1"),
     (req, res, next) => {
       const errors = validationResult(req);

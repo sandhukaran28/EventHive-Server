@@ -1,3 +1,4 @@
+require("dotenv").config();
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -37,7 +38,7 @@ userSchema.pre("save", async function (next) {
 
 // Generate JWT Token
 userSchema.methods.generateToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign({ id: this._id }, 'eventhivetoken', { expiresIn: "7d" });
 };
 
 // Compare password during login

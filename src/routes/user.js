@@ -9,6 +9,9 @@ const {
   getUserBookings,
 } = require("../controllers/userController");
 
+// Get user bookings
+router.get("/bookings", protect, getUserBookings);
+
 // Get all users (Admin only)
 router.get("/", protect, isAdmin, getAllUsers);
 
@@ -16,12 +19,10 @@ router.get("/", protect, isAdmin, getAllUsers);
 router.get("/:id", protect, getUserById);
 
 // Update user details
-router.put("/:id", protect, updateUser);
+router.put("/", protect, updateUser);
 
 // Delete user
 router.delete("/:id", protect, deleteUser);
 
-// Get user bookings
-router.get("/:id/bookings", protect, getUserBookings);
 
 module.exports = router;

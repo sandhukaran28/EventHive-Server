@@ -26,11 +26,16 @@ exports.createBooking = async (req, res) => {
       quantity,
     });
 
-    // Save the booking to DB
     await newBooking.save();
 
     // Update event capacity
     event.capacity -= quantity;
+
+    // ✅ Push user into attendees array as many times as quantity
+    for (let i = 0; i < quantity; i++) {
+      event.attendees.push(userId);
+    }
+
     await event.save();
 
     res.status(201).json({

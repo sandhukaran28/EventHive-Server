@@ -29,26 +29,28 @@ exports.getUserById = async (req, res) => {
 
 // Update user details
 exports.updateUser = async (req, res) => {
-  const { id } = req.params;
   const { name, email } = req.body;
+  const userId = req.user.id; 
 
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(userId); 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update user details
+    // Update fields
     user.name = name || user.name;
     user.email = email || user.email;
 
     await user.save();
+
     res.status(200).json({ message: "User updated", user });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Delete user
 exports.deleteUser = async (req, res) => {
@@ -68,14 +70,8 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// Get user bookings
 exports.getUserBookings = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const bookings = await Booking.find({ userId: id }).populate("eventId");
-    res.status(200).json(bookings);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
+  const userId = req.user.id;
+  const bookings = await Booking.find({ user: userId }).populate("event");
+  res.status(200).json(bookings);
 };

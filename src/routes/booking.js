@@ -4,7 +4,8 @@ const {
   getAllBookings, 
   getBookingById, 
   updateBookingStatus, 
-  cancelBooking 
+  cancelBooking,
+  getMyBookings
 } = require('../controllers/bookingController');
 const { protect } = require('../middleware/authMiddleware');
 const { validateBooking } = require('../middleware/eventValidationMiddleware');
