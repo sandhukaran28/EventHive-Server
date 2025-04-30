@@ -3,14 +3,30 @@ const Booking = require("../models/bookingModel");
 
 // Get all users (Admin-only endpoint)
 exports.getAllUsers = async (req, res) => {
+  const page = parseInt(req.query.page) || 1; 
+  const limit = parseInt(req.query.limit) || 6; 
+
+  const skip = (page - 1) * limit;
+
   try {
-      const users = await User.find().select("-password");
-      res.status(200).json(users);
+    const totalUsers = await User.countDocuments();
+    const users = await User.find()
+      .select("-password")
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      page,
+      totalPages: Math.ceil(totalUsers / limit),
+      totalUsers,
+      users,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Get user by ID
 exports.getUserById = async (req, res) => {
@@ -71,7 +87,31 @@ exports.deleteUser = async (req, res) => {
 };
 
 exports.getUserBookings = async (req, res) => {
-  const userId = req.user.id;
-  const bookings = await Booking.find({ user: userId }).populate("event");
-  res.status(200).json(bookings);
+  try {
+    const userId = req.user.id;
+    let { page, limit } = req.query;
+
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 6;
+
+    const skip = (page - 1) * limit;
+
+    const bookings = await Booking.find({ user: userId })
+      .populate("event")
+      .skip(skip)
+      .limit(limit);
+
+    const totalBookings = await Booking.countDocuments({ user: userId });
+
+    res.status(200).json({
+      page,
+      totalPages: Math.ceil(totalBookings / limit),
+      totalBookings,
+      bookings,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
+

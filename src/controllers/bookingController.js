@@ -48,19 +48,38 @@ exports.createBooking = async (req, res) => {
   }
 };
 
-// Get all bookings
+// Get all bookings with pagination
 exports.getAllBookings = async (req, res) => {
   try {
+    let { page, limit } = req.query;
+
+    page = parseInt(page) || 1; // Default to page 1
+    limit = parseInt(limit) || 10; // Default to 10 bookings per page
+
+    const skip = (page - 1) * limit;
+
+    // Fetch bookings with pagination
     const bookings = await Booking.find()
       .populate("user", "name email")
-      .populate("event", "title date location");
-    
-    res.status(200).json(bookings);
+      .populate("event", "title date location")
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 }); // Latest bookings first
+
+    const totalBookings = await Booking.countDocuments();
+
+    res.status(200).json({
+      page,
+      totalPages: Math.ceil(totalBookings / limit),
+      totalBookings,
+      bookings,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Get booking by ID
 exports.getBookingById = async (req, res) => {

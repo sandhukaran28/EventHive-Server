@@ -12,7 +12,7 @@ exports.getAllEvents = async (req, res) => {
     const skip = (page - 1) * limit;
 
     // Fetch events with pagination
-    const events = await Event.find().skip(skip).limit(limit);
+    const events = await Event.find().sort({ date: 1 }).skip(skip).limit(limit);
 
     // Get total count of events (for frontend to know total pages)
     const totalEvents = await Event.countDocuments();
